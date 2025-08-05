@@ -1,0 +1,48 @@
+======================================
+ System Health Check – 2025-08-05 01:17:08
+======================================
+
+ Date & Time:
+Tue Aug  5 01:17:08 MDT 2025
+
+ Uptime:
+ 01:17:08 up  1:11,  1 user,  load average: 0.00, 0.00, 0.04
+
+ CPU Load:
+ 0.00, 0.00, 0.04
+
+ Memory Usage (MB):
+               total        used        free      shared  buff/cache   available
+Mem:            5842         476        4318           3        1203        5366
+Swap:           2048           0        2048
+
+ Disk Usage:
+Filesystem      Size  Used Avail Use% Mounted on
+none            2.9G     0  2.9G   0% /usr/lib/modules/6.6.87.2-microsoft-standard-WSL2
+none            2.9G  4.0K  2.9G   1% /mnt/wsl
+drivers         477G   78G  400G  17% /usr/lib/wsl/drivers
+/dev/sdf       1007G  1.8G  954G   1% /
+none            2.9G   76K  2.9G   1% /mnt/wslg
+none            2.9G     0  2.9G   0% /usr/lib/wsl/lib
+rootfs          2.9G  2.7M  2.9G   1% /init
+none            2.9G  524K  2.9G   1% /run
+none            2.9G     0  2.9G   0% /run/lock
+none            2.9G     0  2.9G   0% /run/shm
+none            2.9G   76K  2.9G   1% /mnt/wslg/versions.txt
+none            2.9G   76K  2.9G   1% /mnt/wslg/doc
+C:\             477G   78G  400G  17% /mnt/c
+tmpfs           2.9G   16K  2.9G   1% /run/user/1000
+
+ Top 5 Memory‑Consuming Processes:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         219  0.0  0.3 107016 21888 ?        Ssl  00:14   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+root          52  0.7  0.2  66832 15072 ?        S<s  00:14   0:28 /usr/lib/systemd/systemd-journald
+root           1  0.1  0.2  21708 12496 ?        Ss   00:14   0:04 /sbin/init
+root         194  0.0  0.2 1756096 12416 ?       Ssl  00:14   0:00 /usr/libexec/wsl-pro-service -vv
+systemd+     117  0.0  0.2  21452 12288 ?        Ss   00:14   0:00 /usr/lib/systemd/systemd-resolved
+
+ Service Status:
+  nginx is NOT running
+  sshd is NOT running
+======================================
+
