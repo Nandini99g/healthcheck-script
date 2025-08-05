@@ -4,47 +4,57 @@ TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 LOGFILE="healthlog.txt"
 
 {
-  echo "======================================"
-  echo " System Health Check – $TIMESTAMP"
-  echo "======================================"
+  echo "======================================" >> $LOGFILE
+  echo " System Health Check – $TIMESTAMP" >> $LOGFILE
+  echo "======================================" >> $LOGFILE
   
-  echo ""
-  echo " Date & Time:"
-  date
+  echo "" >> $LOGFILE
+  echo " Date & Time:" >> $LOGFILE
+  date >> $LOGFILE
   
-  echo ""
-  echo " Uptime:"
-  uptime
+  echo "" >> $LOGFILE
+  echo " Uptime:" >> $LOGFILE
+  uptime >> $LOGFILE
   
-  echo ""
-  echo " CPU Load:"
-  uptime | awk -F'load average:' '{ print $2 }'
+  echo "" >> $LOGFILE
+  echo " CPU Load:" >> $LOGFILE
+  uptime | awk -F'load average:' '{ print $2 }' >> $LOGFILE
   
-  echo ""
-  echo " Memory Usage (MB):"
-  free -m
+  echo "" >> $LOGFILE
+  echo " Memory Usage (MB):" >> $LOGFILE
+  free -m >> $LOGFILE
   
-  echo ""
-  echo " Disk Usage:"
-  df -h
+  echo "" >> $LOGFILE
+  echo " Disk Usage:" >> $LOGFILE
+  df -h >> $LOGFILE
   
-  echo ""
-  echo " Top 5 Memory‑Consuming Processes:"
-  ps aux --sort=-%mem | head -n 6
+  echo "" >> $LOGFILE
+  echo " Top 5 Memory‑Consuming Processes:" >> $LOGFILE
+  ps aux --sort=-%mem | head -n 6 >> $LOGFILE
   
-  echo ""
-  echo " Service Status:"
+  echo "" >> $LOGFILE
+  echo " Service Status:" >> $LOGFILE
   
-  for svc in nginx sshd; do
-    if pgrep ${svc} > /dev/null; then
-      echo "  ${svc} is running"
-    else
-      echo "  ${svc} is NOT running"
-    fi
-  done
+  if [ "$#" -eq 0 ]; then
+    echo "No services were specified to check." >> $LOGFILE
+else
+    echo "Service Status:" >> $LOGFILE
+    for SERVICE in "$@"; do
+        STATUS=$(systemctl is-active $SERVICE 2>/dev/null)
+        if [ "$STATUS" == "active" ]; then
+            echo "$SERVICE: running" >> $LOGFILE
+        elif [ "$STATUS" == "inactive" ]; then
+            echo "$SERVICE: not running" >> $LOGFILE
+        elif [ "$STATUS" == "unknown" ]; then
+            echo "$SERVICE: unknown service" >> $LOGFILE
+        else
+            echo "$SERVICE: $STATUS" >> $LOGFILE
+        fi
+    done
+fi
   
-  echo "======================================"
-  echo ""
+  echo "======================================" >> $LOGFILE
+  echo "" >> $LOGFILE
 } >> "$LOGFILE"
 
 echo " Health check complete. Logged to $LOGFILE"
