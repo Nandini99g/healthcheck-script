@@ -40,15 +40,11 @@ LOGFILE="healthlog.txt"
 else
     echo "Service Status:" >> $LOGFILE
     for SERVICE in "$@"; do
-        STATUS=$(systemctl is-active $SERVICE 2>/dev/null)
-        if [ "$STATUS" == "active" ]; then
+        # Check if any running process contains the service name
+        if ps aux | grep -v grep | grep -w "$SERVICE" &> /dev/null; then
             echo "$SERVICE: running" >> $LOGFILE
-        elif [ "$STATUS" == "inactive" ]; then
-            echo "$SERVICE: not running" >> $LOGFILE
-        elif [ "$STATUS" == "unknown" ]; then
-            echo "$SERVICE: unknown service" >> $LOGFILE
         else
-            echo "$SERVICE: $STATUS" >> $LOGFILE
+            echo "$SERVICE: not running or not found" >> $LOGFILE
         fi
     done
 fi
