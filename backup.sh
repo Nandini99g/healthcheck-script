@@ -5,10 +5,11 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_ROOT="./backups/backup_$TIMESTAMP"
 LOGFILE="./backup.log"
 COMPRESS=false
-remote=false
-recent=""
-nolog=false
 FILES_TO_BACKUP=()
+SUCCESS_COUNT=0
+FAILURE_COUNT=0
+
+# === CREATE BACKUP DIRECTORY ===
 mkdir -p "$BACKUP_ROOT"
 
 # === PARSE ARGUMENTS ===
@@ -20,14 +21,11 @@ for ARG in "$@"; do
     fi
 done
 
-# === CREATE BACKUP DIRECTORY ===
-mkdir -p "$BACKUP_ROOT"
-
 # === START LOG ===
 {
-echo "---------------------------------------------"
-echo " Backup Log - $TIMESTAMP"
-echo "Target Folder: $BACKUP_ROOT"
+  echo "---------------------------------------------"
+  echo " Backup Log - $TIMESTAMP"
+  echo " Target Folder: $BACKUP_ROOT"
 } >> "$LOGFILE"
 
 # === BACKUP LOGIC ===
@@ -42,8 +40,10 @@ for FILE in "${FILES_TO_BACKUP[@]}"; do
         else
             VALID_FILES+=("$FILE")
         fi
+        ((SUCCESS_COUNT++))
     else
         echo " Not Found: $FILE" >> "$LOGFILE"
+        ((FAILURE_COUNT++))
     fi
 done
 
@@ -54,4 +54,20 @@ if [ "$COMPRESS" = true ] && [ ${#VALID_FILES[@]} -gt 0 ]; then
     echo " Compressed archive created: $TARFILE" >> "$LOGFILE"
 fi
 
-echo " Backup complete. Details logged to $LOGFILE"
+# === SUMMARY ===
+{
+  echo ""
+  echo " Summary:"
+  echo "  Total Files Provided : ${#FILES_TO_BACKUP[@]}"
+  echo "  Successfully Backed Up: $SUCCESS_COUNT"
+  echo "  Failed (Not Found): $FAILURE_COUNT"
+  echo "  Mode: $([[ "$COMPRESS" = true ]] && echo "Compressed" || echo "Individual File Copy")"
+  echo "---------------------------------------------"
+  echo ""
+} >> "$LOGFILE"
+
+echo " Backup complete. Summary:"
+echo "    Success  : $SUCCESS_COUNT"
+echo "    Failed   : $FAILURE_COUNT"
+echo "    Log saved: $LOGFILE"
+
